@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Chip, IconButton, Typography, Paper } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -7,6 +7,7 @@ import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
 
 import { upcomingNotices } from './notices.jsx';
 import { tokens } from '../theme.js';
@@ -148,14 +149,17 @@ const MultiAnnouncementSpotlight = () => {
             sx={{
               p: 2.5,
               borderRadius: '16px',
-              background: 'rgba(15, 23, 42, 0.88)', // Dark frosted panel
+              background: 'rgba(255, 255, 255, 0.95)', // Solid bright white surface
               backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              boxShadow: '0 20px 25px -5px rgba(0,0,0,0.3), 0 8px 10px -6px rgba(0,0,0,0.3)',
-              color: '#fff',
+              border: '1px solid rgba(255, 255, 255, 0.8)',
+              boxShadow: '0 20px 25px -5px rgba(0,0,0,0.3)',
+              color: '#0F172A', // Dark ink base
               position: 'relative',
               overflow: 'hidden',
+              // Force all nested typography to use the dark color EXCEPT the view details button
+              '& *:not(.view-details-btn):not(.view-details-btn *)': {
+                color: 'inherit',
+              },
             }}
           >
             {/* Top Gradient Accent Bar */}
@@ -165,25 +169,76 @@ const MultiAnnouncementSpotlight = () => {
                 top: 0,
                 left: 0,
                 right: 0,
-                height: '3px',
-                background: `linear-gradient(90deg, ${tokens?.bronzeLight || '#D4AF37'}, #8B1E3F)`,
+                height: '4px',
+               
               }}
             />
 
-            {/* Header: Chip / Badges + Navigation Controls */}
+            {/* NEW: Heading Row with Animated Bell and Close Button */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+                <NotificationsActiveRoundedIcon
+                  sx={{
+                    color: '#8B1E3F !important', // Force brand red color
+                    fontSize: '18px',
+                    animation: 'ring 2.5s ease infinite',
+                    transformOrigin: 'top center',
+                    '@keyframes ring': {
+                      '0%': { transform: 'rotate(0)' },
+                      '10%': { transform: 'rotate(20deg)' },
+                      '20%': { transform: 'rotate(-15deg)' },
+                      '30%': { transform: 'rotate(10deg)' },
+                      '40%': { transform: 'rotate(-5deg)' },
+                      '50%': { transform: 'rotate(0)' },
+                      '100%': { transform: 'rotate(0)' },
+                    },
+                  }}
+                />
+                <Typography
+                  variant="overline"
+                  sx={{
+                    fontWeight: 800,
+                    color: '#8B1E3F !important',
+                    lineHeight: 1,
+                    letterSpacing: 0.5,
+                    fontSize: '0.7rem',
+                  }}
+                >
+                  Upcoming event(s)
+                </Typography>
+              </Box>
+
+              <IconButton
+                onClick={handleDismiss}
+                size="small"
+                aria-label="Dismiss announcements"
+                sx={{
+                  opacity: 0.5,
+                  p: 0.4,
+                  mr: -0.5,
+                  mt: -0.5,
+                  '&:hover': {
+                    opacity: 1,
+                    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                  },
+                }}
+              >
+                <CloseRoundedIcon fontSize="small" />
+              </IconButton>
+            </Box>
+
+            {/* Badges + Navigation Controls Row */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Chip
-                  icon={<CalendarTodayRoundedIcon sx={{ fontSize: '13px !important', color: '#fff !important' }} />}
+                  icon={<CalendarTodayRoundedIcon sx={{ fontSize: '13px !important' }} />}
                   label={getCountdownText(daysRemaining)}
                   size="small"
                   sx={{
                     height: 24,
                     fontSize: '0.72rem',
                     fontWeight: 700,
-                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                    color: '#fff',
-                    backdropFilter: 'blur(4px)',
+                    backgroundColor: 'rgba(15, 23, 42, 0.08) !important', // Force light grey bg
                   }}
                 />
 
@@ -192,9 +247,9 @@ const MultiAnnouncementSpotlight = () => {
                   <Typography
                     variant="caption"
                     sx={{
-                      fontSize: '0.7rem',
+                      fontSize: '0.8rem',
                       fontWeight: 600,
-                      color: 'rgba(255, 255, 255, 0.6)',
+                      opacity: 0.6,
                       ml: 0.5,
                     }}
                   >
@@ -204,7 +259,7 @@ const MultiAnnouncementSpotlight = () => {
               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                {/* Arrow Controls (Only rendered if >1 notice) */}
+                {/* Arrow Controls */}
                 {totalNotices > 1 && (
                   <>
                     <IconButton
@@ -212,9 +267,9 @@ const MultiAnnouncementSpotlight = () => {
                       size="small"
                       aria-label="Previous announcement"
                       sx={{
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        opacity: 0.6,
                         p: 0.4,
-                        '&:hover': { color: '#fff', backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+                        '&:hover': { opacity: 1, backgroundColor: 'rgba(0, 0, 0, 0.05)' },
                       }}
                     >
                       <ChevronLeftRoundedIcon fontSize="small" />
@@ -224,32 +279,15 @@ const MultiAnnouncementSpotlight = () => {
                       size="small"
                       aria-label="Next announcement"
                       sx={{
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        opacity: 0.6,
                         p: 0.4,
-                        '&:hover': { color: '#fff', backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+                        '&:hover': { opacity: 1, backgroundColor: 'rgba(0, 0, 0, 0.05)' },
                       }}
                     >
                       <ChevronRightRoundedIcon fontSize="small" />
                     </IconButton>
                   </>
                 )}
-
-                <IconButton
-                  onClick={handleDismiss}
-                  size="small"
-                  aria-label="Dismiss announcements"
-                  sx={{
-                    color: 'rgba(255, 255, 255, 0.6)',
-                    p: 0.4,
-                    ml: 0.5,
-                    '&:hover': {
-                      color: '#fff',
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    },
-                  }}
-                >
-                  <CloseRoundedIcon fontSize="small" />
-                </IconButton>
               </Box>
             </Box>
 
@@ -272,7 +310,6 @@ const MultiAnnouncementSpotlight = () => {
                       fontWeight: 700,
                       fontSize: '0.95rem',
                       lineHeight: 1.35,
-                      color: '#F8FAFC',
                     }}
                   >
                     {currentNotice.title}
@@ -283,7 +320,8 @@ const MultiAnnouncementSpotlight = () => {
 
             {/* Footer Row: Progress Dots & Action Button */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              {/* Dot Indicators */}
+              
+              {/* Tracker Slider (Dots) */}
               {totalNotices > 1 ? (
                 <Box sx={{ display: 'flex', gap: 0.6, alignItems: 'center' }}>
                   {activeNotices.map((_, idx) => (
@@ -297,13 +335,12 @@ const MultiAnnouncementSpotlight = () => {
                         width: idx === currentIndex ? 16 : 6,
                         height: 6,
                         borderRadius: '3px',
-                        backgroundColor:
-                          idx === currentIndex ? tokens?.bronzeLight || '#D4AF37' : 'rgba(255, 255, 255, 0.25)',
+                        // Force background colors so they don't inherit dark mode text rules
+                        backgroundColor: idx === currentIndex ? '#8B1E3F !important' : 'rgba(15, 23, 42, 0.2) !important',
                         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                         cursor: 'pointer',
                         '&:hover': {
-                          backgroundColor:
-                            idx === currentIndex ? tokens?.bronzeLight || '#D4AF37' : 'rgba(255, 255, 255, 0.5)',
+                          backgroundColor: idx === currentIndex ? '#8B1E3F !important' : 'rgba(15, 23, 42, 0.4) !important',
                         },
                       }}
                     />
@@ -313,7 +350,9 @@ const MultiAnnouncementSpotlight = () => {
                 <Box />
               )}
 
+              {/* View Details Button */}
               <Button
+                className="view-details-btn" // Exclusion class for the Paper text override
                 variant="contained"
                 onClick={handleViewNotice}
                 endIcon={<ArrowForwardRoundedIcon />}
@@ -324,13 +363,17 @@ const MultiAnnouncementSpotlight = () => {
                   fontSize: '0.825rem',
                   py: 0.7,
                   px: 2,
-                  backgroundColor: '#fff',
-                  color: '#0F172A',
-                  boxShadow: 'none',
+                  // Force dark blue button background with pure white text
+                  backgroundColor: '#13203A !important',
+                  color: '#ffffff !important',
+                  boxShadow: '0 2px 8px rgba(19, 32, 58, 0.2)',
                   '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    boxShadow: '0 4px 12px rgba(255, 255, 255, 0.2)',
+                    backgroundColor: '#1E3258 !important',
+                    boxShadow: '0 4px 12px rgba(19, 32, 58, 0.3)',
                   },
+                  '& svg': {
+                    color: '#ffffff !important',
+                  }
                 }}
               >
                 View Details
