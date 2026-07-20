@@ -35,7 +35,15 @@ const InfoRow = ({ icon: Icon, label, value }) => (
     <Icon sx={{ color: tokens.bronzeLight, mt: 0.3 }} />
     <Box>
       <Typography sx={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem' }}>{label}</Typography>
-      <Typography sx={{ color: '#fff', fontWeight: 600 }}>{value}</Typography>
+      {Array.isArray(value) ? (
+        value.map((line, i) => (
+          <Typography key={i} sx={{ color: '#fff', fontWeight: 600, lineHeight: 1.5 }}>
+            {line}
+          </Typography>
+        ))
+      ) : (
+        <Typography sx={{ color: '#fff', fontWeight: 600 }}>{value}</Typography>
+      )}
     </Box>
   </Stack>
 );
@@ -55,90 +63,77 @@ const Contact = () => {
   };
 
   return (
-    <AnimatedSection id="contact">
-      <Box sx={{ background: `linear-gradient(165deg, ${tokens.navyInk} 0%, ${tokens.navyDeep} 100%)`, py: { xs: 9, md: 13 } }}>
-        <Container maxWidth="lg">
-          <Grid container spacing={{ xs: 6, md: 8 }}>
-            <Grid item xs={12} md={5}>
-              <Typography variant="overline" sx={{ color: tokens.bronzeLight, display: 'block', mb: 1.5 }}>
-                Get In Touch
-              </Typography>
-              <Typography variant="h2" sx={{ color: '#fff', fontSize: { xs: '2rem', md: '2.4rem' }, mb: 3 }}>
-                Lodge a request with the Office
-              </Typography>
-              <Typography sx={{ color: 'rgba(255,255,255,0.72)', lineHeight: 1.8, mb: 5 }}>
-                Submit the details of your matter below, or reach the office
-                directly during business hours. We will confirm receipt of any
-                instruction in writing.
-              </Typography>
+   <AnimatedSection id="contact">
+  <Box sx={{ background: `linear-gradient(165deg, ${tokens.navyInk} 0%, ${tokens.navyDeep} 100%)`, py: { xs: 9, md: 13 } }}>
+    <Container maxWidth="lg">
+      <Grid container spacing={{ xs: 6, md: 8 }} alignItems="stretch">
+        <Grid item xs={12} md={5} sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant="overline" sx={{ color: tokens.bronzeLight, display: 'block', mb: 1.5 }}>
+            Get In Touch
+          </Typography>
+          <Typography variant="h2" sx={{ color: '#fff', fontSize: { xs: '2rem', md: '2.4rem' }, mb: 3 }}>
+            Lodge a request with the Office
+          </Typography>
+          <Typography sx={{ color: 'rgba(255,255,255,0.72)', lineHeight: 1.8, mb: 5 }}>
+            Submit the details of your matter below, or reach the office
+            directly during business hours. We will confirm receipt of any
+            instruction in writing.
+          </Typography>
 
-              <Stack spacing={3.5}>
-                <InfoRow icon={PhoneIcon} label="Telephone" value="061 284 0606 | 087 150 0033" />
-                <InfoRow icon={EmailIcon} label="Email" value="Info@seshegosheriff.co.za" />
-                <InfoRow icon={AccessTimeIcon} label="Office Hours" value="Mon - Fri, 08:00 - 16:00" />
-                <InfoRow icon={LocationOnIcon} label="Head Office" value=" 8215/ 8217 Zone 7, Seshego" />
-              </Stack>
-            </Grid>
+          <Stack spacing={3.5}>
+            <InfoRow icon={PhoneIcon} label="Telephone" value="061 284 0606 | 087 150 0033" />
+            <InfoRow icon={EmailIcon} label="Email" value="Info@seshegosheriff.co.za" />
+            <InfoRow
+              icon={AccessTimeIcon}
+              label="Office Hours"
+              value={['Mon - Thu: 07:30 - 16:30', 'Fri: 07:30 - 16:00']}
+            />
+            <InfoRow icon={LocationOnIcon} label="Head Office" value="8215/8217 Zone 7, Seshego, Limpopo" />
+          </Stack>
+        </Grid>
 
-          {/*  <Grid item xs={12} md={7}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.6 }}
-              >
-                <Box
-                  component="form"
-                  onSubmit={handleSubmit}
-                  sx={{ background: '#fff', p: { xs: 3, md: 4.5 }, borderRadius: 1 }}
-                >
-                  {submitted && (
-                    <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSubmitted(false)}>
-                      Your request has been received. The office will be in touch shortly.
-                    </Alert>
-                  )}
-                  <Grid container spacing={2.5}>
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth required label="Full Name" value={form.name} onChange={handleChange('name')} />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth required type="email" label="Email Address" value={form.email} onChange={handleChange('email')} />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Phone Number" value={form.phone} onChange={handleChange('phone')} />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label="Case / File Reference" value={form.caseRef} onChange={handleChange('caseRef')} />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField fullWidth select required label="Nature of Matter" value={form.matter} onChange={handleChange('matter')}>
-                        {MATTER_TYPES.map((m) => (
-                          <MenuItem key={m} value={m}>{m}</MenuItem>
-                        ))}
-                      </TextField>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField fullWidth required multiline rows={4} label="Details" value={form.message} onChange={handleChange('message')} />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Button
-                        type="submit"
-                        size="large"
-                        variant="contained"
-                        endIcon={<SendIcon />}
-                        sx={{ background: tokens.navyInk, '&:hover': { background: tokens.navyDeep } }}
-                      >
-                        Submit Request
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </motion.div>
-            </Grid> */}
-          </Grid>
-        </Container>
-      </Box>
-    </AnimatedSection>
+        <Grid item xs={12} md={7} sx={{ display: 'flex' }}>
+          {/* Google Map with location pointer */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+            style={{ width: '100%', display: 'flex' }}
+          >
+            <Box
+              sx={{
+                mt: { xs: 0, md: 5 },
+                width: '100%',
+                minHeight: { xs: 320, md: 480 },
+                borderRadius: 2,
+                overflow: 'hidden',
+                border: `1px solid ${tokens.bronzeLight}55`,
+                boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
+              }}
+            >
+              <Box
+                component="iframe"
+                title="Head Office Location - Seshego Sheriff"
+                src="https://www.google.com/maps?q=8215+Zone+7,+Seshego,+Limpopo,+South+Africa&output=embed"
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  minHeight: { xs: 320, md: 480 },
+                  border: 0,
+                  display: 'block',
+                  filter: 'grayscale(15%) contrast(1.05)',
+                }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </Box>
+          </motion.div>
+        </Grid>
+      </Grid>
+    </Container>
+  </Box>
+</AnimatedSection>
   );
 };
 
