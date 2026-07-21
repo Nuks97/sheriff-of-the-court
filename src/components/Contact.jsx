@@ -81,6 +81,7 @@ const Contact = () => {
           </Typography>
 
           <Stack spacing={3.5}>
+             <InfoRow icon={LocationOnIcon} label="Head Office" value="8215/8217 Zone 7, Seshego, Limpopo" />
             <InfoRow icon={PhoneIcon} label="Telephone" value="061 284 0606 | 087 150 0033" />
             <InfoRow icon={EmailIcon} label="Email" value="Info@seshegosheriff.co.za" />
             <InfoRow
@@ -88,48 +89,79 @@ const Contact = () => {
               label="Office Hours"
               value={['Mon - Thu: 07:30 - 16:30', 'Fri: 07:30 - 16:00']}
             />
-            <InfoRow icon={LocationOnIcon} label="Head Office" value="8215/8217 Zone 7, Seshego, Limpopo" />
+           
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={7} sx={{ display: 'flex' }}>
-          {/* Google Map with location pointer */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6 }}
-            style={{ width: '100%', display: 'flex' }}
-          >
-            <Box
-              sx={{
-                mt: { xs: 0, md: 5 },
-                width: '100%',
-                minHeight: { xs: 320, md: 480 },
-                borderRadius: 2,
-                overflow: 'hidden',
-                border: `1px solid ${tokens.bronzeLight}55`,
-                boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
-              }}
-            >
-              <Box
-                component="iframe"
-                title="Head Office Location - Seshego Sheriff"
-                src="https://www.google.com/maps?q=8215+Zone+7,+Seshego,+Limpopo,+South+Africa&output=embed"
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  minHeight: { xs: 320, md: 480 },
-                  border: 0,
-                  display: 'block',
-                  filter: 'grayscale(15%) contrast(1.05)',
-                }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </Box>
-          </motion.div>
-        </Grid>
+      <Grid item xs={12} md={7} sx={{ display: 'flex' }}>
+  {/* Google Map with location pointer */}
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, amount: 0.3 }}
+    transition={{ duration: 0.6 }}
+    style={{ width: '100%', display: 'flex' }}
+  >
+    <Box
+      sx={{
+        mt: { xs: 0, md: 5 },
+        width: '100%',
+        minHeight: { xs: 320, md: 480 },
+        position: 'relative',
+        borderRadius: 2,
+        overflow: 'hidden',
+        border: `1px solid ${tokens.bronzeLight}55`,
+        boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
+      }}
+    >
+      <Box
+        component="iframe"
+        title="Seshego Sheriff Head Office Location"
+        src="https://www.google.com/maps?q=-23.8525151,29.3808505&z=17&output=embed"
+        sx={{
+          width: '100%',
+          height: '100%',
+          minHeight: { xs: 320, md: 480 },
+          border: 0,
+          display: 'block',
+          filter: 'grayscale(15%) contrast(1.05)',
+        }}
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+      />
+
+      {/* Custom label overlay, since Google's own pin title needs a click to reveal */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: { xs: 12, md: 16 },
+          left: { xs: 12, md: 16 },
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          background: tokens.navyInk,
+          color: '#fff',
+          borderRadius: 1.5,
+          pl: 1.2,
+          pr: 1.8,
+          py: 1,
+          boxShadow: '0 6px 18px rgba(0,0,0,0.4)',
+          maxWidth: { xs: '80%', md: 260 },
+        }}
+      >
+        <LocationOnIcon sx={{ color:'#8B1E3F', fontSize: 22, flexShrink: 0 }} />
+        <Box>
+          <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', lineHeight: 1.25 }}>
+            Seshego Sheriff Head Office
+          </Typography>
+          <Typography sx={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.65)', lineHeight: 1.3 }}>
+          {/* 27 133rd Ave, Seshego-G, Polokwane*/}
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
+  </motion.div>
+</Grid>
       </Grid>
     </Container>
   </Box>
